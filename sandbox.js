@@ -1,5 +1,5 @@
 const list = document.querySelector("ul");
-const input = document.getElementById("#recipe");
+const form = document.querySelector("form");
 
 const addRecipe = recipe => {
   let time = recipe.data.toDate();
@@ -12,6 +12,7 @@ const addRecipe = recipe => {
   return (list.innerHTML += html);
 };
 
+// get documents
 db.collection("recipes")
   .get()
   .then(snapshot => {
@@ -22,3 +23,24 @@ db.collection("recipes")
   .catch(err => {
     console.log(err);
   });
+
+// add documents
+form.addEventListener("submit", e => {
+  e.preventDefault();
+
+  const now = new Date();
+  const recipe = {
+    title: form.recipe.value,
+    data: firebase.firestore.Timestamp.fromDate(now),
+    author: "admin"
+  };
+
+  db.collection("recipes")
+    .add(recipe)
+    .then(() => {
+      console.log("recipe added");
+    })
+    .catch(err => {
+      console.log(err);
+    });
+});
