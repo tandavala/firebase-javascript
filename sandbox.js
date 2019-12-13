@@ -1,14 +1,16 @@
 const list = document.querySelector("ul");
 const form = document.querySelector("form");
 
-const addRecipe = recipe => {
+const addRecipe = (recipe, id) => {
   let time = recipe.data.toDate();
   let html = `
-        <li>
+        <li data-id="${id}">
             <di>${recipe.title}</div>
             <di>${time}</div>
+            <button class="btn btn-danger btn-sm my-2">delete</button>
         </li>
     `;
+
   return (list.innerHTML += html);
 };
 
@@ -17,7 +19,8 @@ db.collection("recipes")
   .get()
   .then(snapshot => {
     snapshot.docs.forEach(doc => {
-      addRecipe(doc.data());
+      console.log(doc.id);
+      addRecipe(doc.data(), doc.id);
     });
   })
   .catch(err => {
@@ -43,4 +46,15 @@ form.addEventListener("submit", e => {
     .catch(err => {
       console.log(err);
     });
+});
+
+// deleting data
+list.addEventListener("click", e => {
+  //console.log(e);
+  if (e.target.tagName === "BUTTON") {
+    const id = e.target.parentElement.getAttribute("data-id");
+    console.log(e);
+  } else {
+    console.log("not a button");
+  }
 });
